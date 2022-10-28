@@ -1,32 +1,48 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar app dark dense elevation="0">
+      <span>
+        Gestor de autoscore
+      </span>
+      <v-spacer></v-spacer>
+      <v-icon small :color="socket.connected ? 'success' : 'error'">
+        fas fa-circle
+      </v-icon>
+    </v-app-bar>
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+  </v-app>
 </template>
 
+<script>
+  import io from 'socket.io-client'
+  export default {
+    name: 'App',
+    watch: {
+      socket:{
+        handler(){
+          console.log(this.socket);
+        },
+        deep:true
+      }
+    },
+
+    data: () => ({
+      socket : io(process.env.VUE_APP_URL_API)
+    }),
+  };
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
 }
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.list-enter-from,
+.list-leave-to{
+  opacity: 0;
+  transform: translateX(-50px);
 }
 </style>
