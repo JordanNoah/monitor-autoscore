@@ -31,6 +31,9 @@
               <template v-slot:[`item.date_to_grade`] = "{ item }">
                 {{changeDateIso(item.date_to_grade)}}
               </template>
+              <template v-slot:[`item.process_status.process_abbreviation`] = "{ item }">
+                <Status :status="item.process_status" />
+              </template>
             </v-data-table>
           </v-col>
         </v-row>
@@ -54,6 +57,7 @@ export default {
         loading:false,
         options: {},
         headers:[
+            { text: 'Id', align:'start', value:'id' },
             { text: 'User id', align:'start', value:'user_id'},
             { text: 'Course id', align:'start', value:'course_id'},
             { text: 'Source', align:'start', value:'source'},
@@ -61,7 +65,8 @@ export default {
             { text: 'Activity id', align:'start', value:'activity_id'},
             { text: 'Score to assign', align:'start', value:'score_to_assign'},
             { text: 'Date to grade', align:'start', value:'date_to_grade'},
-            { text: 'Item number', align:'start', value:'item_number'}
+            { text: 'Item number', align:'start', value:'item_number'},
+            { text: 'Status', align:'center', value:'process_status.process_abbreviation'}
         ]
     }),
     mounted: async function () {
@@ -72,7 +77,8 @@ export default {
       this.exist_config.status = responseStatus.data
     },
     components: {
-        WatchMoreEventQueue:() => import('@/components/WatchMoreAutscore.vue')
+        WatchMoreEventQueue:() => import('@/components/WatchMoreAutscore.vue'),
+        Status:() => import('@/components/Status.vue')
     },
     methods:{
       changeDateIso(date){
@@ -89,6 +95,7 @@ export default {
           }
         }).catch((e) => {throw new Error(e.message)})
         this.autoscore = responseAutoscore.data
+        console.log(this.autoscore);
       },
       openDialogAutoscore(value){
         this.$router.push({name:'autoscore',params:{idAutoscore:value.id}}).catch((e)=>{console.log(e);})
@@ -97,8 +104,13 @@ export default {
     },
     watch:{
         options: {
-            handler () {
-                this.autoscoreData()
+            async handler () {
+              await this.autoscoreData()
+              if (this.$route.params.idAutoscore != undefined) {
+                console.log(this.autoscore);
+                var autoscorefilter = this.autoscore.rows.find(x => x.id == this.$route.params.idAutoscore)
+                this.$store.commit('autoscore_view_more_selected', autoscorefilter)
+              }
             },
             deep: true,
         }
