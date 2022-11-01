@@ -5,7 +5,30 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    autoscore_view_more:null
+    autoscore_view_more:null,
+    crons:[
+      {
+        title: 'Autoscore',
+        abbreviation:'AUTOSCORE',
+        running: false,
+        nextRun: 1667529687,
+        icon: 'fas fa-scroll'
+      },
+      {
+        title: 'Cleaner',
+        abbreviation:'CLEANER',
+        running: false,
+        nextRun: 1667529687,
+        icon:'fas fa-recycle'
+      },
+      {
+        title: 'Autoscore user not found',
+        abbreviation:'USERNOTFOUND',
+        running: true,
+        nextRun: 1667529687,
+        icon:'fas fa-user-times'
+      }
+    ]
   },
   getters: {
   },
@@ -15,6 +38,9 @@ export default new Vuex.Store({
     },
     autoscore_view_more_removed(state){
       state.autoscore_view_more = null
+    },
+    change_cron_state(state,status){
+      state.runCron = status
     }
   },
   actions: {

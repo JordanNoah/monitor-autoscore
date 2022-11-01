@@ -27,7 +27,7 @@
         </v-row>
         <v-row no-gutters>
           <v-col class="mt-2">
-            <v-data-table :headers="headers" :items="autoscore.rows" :options.sync="options" :server-items-length="autoscore.count" :loading="loading" @click:row="openDialogAutoscore">
+            <v-data-table :headers="headers" :items="autoscore.rows" :options.sync="options" :server-items-length="autoscore.count" :loading="loading" @click:row="openDialogAutoscore" :sort-by="defaultsort" sort-desc>
               <template v-slot:[`item.date_to_grade`] = "{ item }">
                 {{changeDateIso(item.date_to_grade)}}
               </template>
@@ -57,7 +57,7 @@ export default {
         loading:false,
         options: {},
         headers:[
-            { text: 'Id', align:'start', value:'id' },
+            { text: 'Id', align:'start', value:'id' , },
             { text: 'User id', align:'start', value:'user_id'},
             { text: 'Course id', align:'start', value:'course_id'},
             { text: 'Source', align:'start', value:'source'},
@@ -67,7 +67,8 @@ export default {
             { text: 'Date to grade', align:'start', value:'date_to_grade'},
             { text: 'Item number', align:'start', value:'item_number'},
             { text: 'Status', align:'center', value:'process_status.process_abbreviation'}
-        ]
+        ],
+        defaultsort:'id'
     }),
     mounted: async function () {
       var responseInstitution = await axios.get('http://192.168.2.140:3000/institutions').catch((e) => {throw new Error(e.message)})

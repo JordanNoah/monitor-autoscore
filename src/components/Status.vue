@@ -20,9 +20,10 @@
                 <v-icon v-else-if="status.process_abbreviation == 'MOODLE_ERROR'" small v-on="on" v-bind="attrs" color="warning">
                     fas fa-university
                 </v-icon>
-                <v-icon v-else-if="status.process_abbreviation == 'EXISTING_GRADE'" small v-on="on" v-bind="attrs">
+                <v-icon v-else-if="status.process_abbreviation == 'EXISTING_GRADE'" small v-on="on" v-bind="attrs" color="info">
                     fas fa-exclamation
                 </v-icon>
+                <v-progress-circular indeterminate v-else-if="status.process_abbreviation == 'PROCESSING'" size="20" width="2" v-on="on" v-bind="attrs" color="info"></v-progress-circular>
             </template>
             <span>
                 {{status.process}}
